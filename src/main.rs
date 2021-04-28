@@ -51,7 +51,7 @@ fn load_test(file: &String) -> Test {
 }
 
 fn assignments(path: &String) {
-    let assignments_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create/view/delete)").interact_text().unwrap();
+    let assignments_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create/view/edit/delete)").interact_text().unwrap();
 
     if assignments_choice == "create" {
         let mut filepath : String = (&path).to_string();
@@ -67,7 +67,7 @@ fn assignments(path: &String) {
         }
 
         let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment").interact().unwrap();
-        let assignment_date : String = dialoguer::Input::new().with_prompt("Enter the due date (YYYY-MM-DD").interact().unwrap();
+        let assignment_date : String = dialoguer::Input::new().with_prompt("Enter the due date (YYYY-MM-DD)").interact().unwrap();
         let assignment_complete : String = dialoguer::Input::new().with_prompt("Is the assignment done? (y/n)").interact_text().unwrap();
         let assignment_complete_bool = false;
 
@@ -88,20 +88,38 @@ fn assignments(path: &String) {
         filepath.push_str(assignment.name.as_str());
         filepath.push_str(".bin");
 
-        std::fs::File::create(&filepath).expect("assignment could not be created.");
+        println!("saving assignment...");
+        std::fs::File::create(&filepath).expect("assignment could notbe created.");
+
+        println!("The following will be saved:");
+        println!("Name: {}", assignment.name);
+        println!("Due Date: {}", assignment.due_date);
+        println!("Completed?: {}", assignment.completed);
 
         save_assignment(&assignment, &filepath)
     }
     else if assignments_choice == "view" {
-        let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to view").interact().unwrap();
+        println!("finding assignments to view...");
         let mut filepath = (&path).to_string();
 
         filepath.push_str("/assignments");
+
+        let assignments = std::fs::read_dir(&filepath).unwrap();
+
+        println!("These are the assignments you have saved:");
+        for path in assignments {
+            println!("{}", path.unwrap().path().display());
+        }
+        
+        let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to view").interact().unwrap();
+
+        println!("finding assignment...");
         filepath.push_str("/");
         filepath.push_str(assignment_name.as_str());
         filepath.push_str(".bin");
 
         let assignment : Assignment = load_assignment(&filepath);
+        println!("assignment found!");
 
         let mut assignment_completed : String = "no".to_string();
 
@@ -116,11 +134,77 @@ fn assignments(path: &String) {
         println!("Due Date: {}", assignment.due_date);
         println!("Completed? {}", assignment_completed);
     }
-    else if assignments_choice == "delete" {
-        let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to delete").interact().unwrap();
+    else if assignments_choice == "edit" {
+        println!("finding assignments to edit...");
         let mut filepath = (&path).to_string();
 
         filepath.push_str("/assignments");
+
+        let assignments = std::fs::read_dir(&filepath).unwrap();
+
+        println!("These are the assignments you have saved:");
+        for path in assignments {
+            println!("{}", path.unwrap().path().display());
+        }
+
+        let assignment_toedit : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to edit").interact().unwrap();
+
+        println!("finding assignment...");
+        filepath.push_str("/");
+        filepath.push_str(assignment_toedit.as_str());
+        filepath.push_str(".bin");
+
+        let mut assignment : Assignment = load_assignment(&filepath);
+        println!("assignment found!");
+
+        let assignment_name : String = dialoguer::Input::new().with_prompt("Name").with_initial_text(assignment.name.as_str()).interact().unwrap();
+        let assignment_duedate : String = dialoguer::Input::new().with_prompt("Due Date").with_initial_text(assignment.due_date.as_str()).interact().unwrap();
+        if assignment.completed == true {
+            let assignment_complete : String = dialoguer::Input::new().with_prompt("Completed? (y/n)").with_initial_text("y").interact().unwrap();
+
+            if assignment_complete == "y" {
+                assignment.completed = true;
+            }
+            else {
+                assignment.completed = false;
+            }
+        }
+        else {
+            let assignment_complete : String = dialoguer::Input::new().with_prompt("Completed? (y/n)").with_initial_text("n").interact().unwrap();
+
+            if assignment_complete == "y" {
+                assignment.completed = true;
+            }
+            else {
+                assignment.completed = false;
+            }
+        }
+
+        assignment.name = assignment_name;
+        assignment.due_date = assignment_duedate;
+
+        println!("The following will be saved:");
+        println!("Name: {}", assignment.name);
+        println!("Due Date: {}", assignment.due_date);
+        println!("Completed?: {}", assignment.completed);
+
+        save_assignment(&assignment, &filepath);
+    }
+    else if assignments_choice == "delete" {
+        println!("finding assignments to delete...");
+        let mut filepath = (&path).to_string();
+
+        filepath.push_str("/assignments");
+
+        let assignments = std::fs::read_dir(&filepath).unwrap();
+
+        println!("These are the assignments you have saved:");
+        for path in assignments {
+            println!("{}", path.unwrap().path().display());
+        }
+        
+        let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to delete").interact().unwrap();
+
         filepath.push_str("/");
         filepath.push_str(assignment_name.as_str());
         filepath.push_str(".bin");
@@ -130,7 +214,17 @@ fn assignments(path: &String) {
 }
 
 fn tests() {
-    
+    let tests_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create, view, delete)").interact_text().unwrap();
+
+    if tests_choice == "create" {
+
+    }
+    else if tests_choice == "view" {
+
+    }
+    else if tests_choice == "delete" {
+
+    }
 }
 
 fn events() {
@@ -143,7 +237,7 @@ fn homework() {
 
 #[warn(non_snake_case)]
 fn option(path: &String) {
-    let option : String = dialoguer::Input::new().with_prompt("What would you like to do? (assignments, tests, events, homework").interact_text().unwrap();
+    let option : String = dialoguer::Input::new().with_prompt("What would you like to do? (assignments, tests, events, homework)").interact_text().unwrap();
 
     if option == "assignments" {
         assignments(path);
