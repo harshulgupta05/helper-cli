@@ -27,11 +27,26 @@ struct Assignment {
     completed: bool,
 }
 
+#[derive(Debug, Serialize, Deserialize, Savefile)]
+struct Test {
+    name: String,
+    date: String,
+    description: String,
+}
+
 fn save_assignment(assignment: &Assignment, file: &String) {
     savefile::prelude::save_file(file, 0, assignment).unwrap();
 }
 
 fn load_assignment(file: &String) -> Assignment {
+    return savefile::prelude::load_file(file, 0).unwrap();
+}
+
+fn save_test(test: &Test, file: &String) {
+    savefile::prelude::save_file(file, 0, test).unwrap();
+}
+
+fn load_test(file: &String) -> Test {
     return savefile::prelude::load_file(file, 0).unwrap();
 }
 
@@ -115,7 +130,7 @@ fn assignments(path: &String) {
 }
 
 fn tests() {
-
+    
 }
 
 fn events() {
