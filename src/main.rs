@@ -25,6 +25,7 @@ struct Assignment {
     name: String,
     due_date: String,
     completed: bool,
+    mark: u8,
 }
 
 #[derive(Debug, Serialize, Deserialize, Savefile)]
@@ -69,6 +70,8 @@ fn assignments(path: &String) {
         let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment").interact().unwrap();
         let assignment_date : String = dialoguer::Input::new().with_prompt("Enter the due date (YYYY-MM-DD)").interact().unwrap();
         let assignment_complete : String = dialoguer::Input::new().with_prompt("Is the assignment done? (y/n)").interact_text().unwrap();
+        let assignment_mark : String = dialoguer::Input::new().with_prompt("Enter the assignment mark (enter 0 if unmarked)").interact().unwrap();
+        let assignment_mark_int : u8 = assignment_mark.trim().parse().unwrap();
         let assignment_complete_bool = false;
 
         if assignment_complete == "y" {
@@ -82,6 +85,7 @@ fn assignments(path: &String) {
             name: assignment_name,
             due_date: assignment_date,
             completed: assignment_complete_bool,
+            mark: assignment_mark_int,
         };
 
         filepath.push_str("/");
@@ -89,12 +93,13 @@ fn assignments(path: &String) {
         filepath.push_str(".bin");
 
         println!("saving assignment...");
-        std::fs::File::create(&filepath).expect("assignment could notbe created.");
+        std::fs::File::create(&filepath).expect("assignment could not be created.");
 
         println!("The following will be saved:");
         println!("Name: {}", assignment.name);
         println!("Due Date: {}", assignment.due_date);
         println!("Completed?: {}", assignment.completed);
+        println!("Mark: {}", assignment.mark);
 
         save_assignment(&assignment, &filepath)
     }
@@ -133,6 +138,7 @@ fn assignments(path: &String) {
         println!("Name: {}", assignment.name);
         println!("Due Date: {}", assignment.due_date);
         println!("Completed? {}", assignment_completed);
+        println!("Mark: {}", assignment.mark);
     }
     else if assignments_choice == "edit" {
         println!("finding assignments to edit...");
@@ -157,6 +163,8 @@ fn assignments(path: &String) {
         let mut assignment : Assignment = load_assignment(&filepath);
         println!("assignment found!");
 
+        let assignment_mark_toedit : String = assignment.mark.to_string();
+
         let assignment_name : String = dialoguer::Input::new().with_prompt("Name").with_initial_text(assignment.name.as_str()).interact().unwrap();
         let assignment_duedate : String = dialoguer::Input::new().with_prompt("Due Date").with_initial_text(assignment.due_date.as_str()).interact().unwrap();
         if assignment.completed == true {
@@ -179,9 +187,11 @@ fn assignments(path: &String) {
                 assignment.completed = false;
             }
         }
+        let assignment_mark_edited : String = dialoguer::Input::new().with_prompt("Mark").with_initial_text(assignment_mark_toedit.as_str()).interact().unwrap();
 
         assignment.name = assignment_name;
         assignment.due_date = assignment_duedate;
+        assignment.mark = assignment_mark_edited.parse().unwrap();
 
         println!("The following will be saved:");
         println!("Name: {}", assignment.name);
