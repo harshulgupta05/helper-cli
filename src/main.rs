@@ -252,16 +252,117 @@ fn tests(path: &String) {
     let tests_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create, view, edit, delete)").interact_text().unwrap();
 
     if tests_choice == "create" {
+        let mut filepath = (&path).to_string();
 
+        filepath.push_str("/tests");
+
+        match std::fs::read_dir(&filepath) {
+            Ok(dir) => { }
+            Err(err) => { match std::fs::create_dir(&filepath) {
+                Ok(dir) => { }
+                Err(err) => { println!("could not create 'tests' directory") }
+            } }
+        }
+
+        let test_name : String = dialoguer::Input::new().with_prompt("Enter the name of the test").interact().unwrap();
+        let test_date : String = dialoguer::Input::new().with_prompt("Enter the date of the test (YYYY-MM-DD)").interact().unwrap();
+        let test_description : String = dialoguer::Input::new().with_prompt("Enter test description/lessons").interact().unwrap();
+        let test_mark : String = dialoguer::Input::new().with_prompt("Enter the test mark (enter 0 if unmarked)").interact().unwrap();
+
+        let test_mark : u8 = test_mark.trim().parse().unwrap();
+
+        let test = Test {
+            name: test_name,
+            date: test_date,
+            description: test_description,
+            mark: test_mark,
+        };
+
+        filepath.push_str("/");
+        filepath.push_str(test.name.as_str());
+        filepath.push_str(".bin");
+
+        println!("creating test....");
+        std::fs::File::create(&filepath).expect("could not create file");
+
+        println!("the following info will be saved:");
+        println!("name: {}", test.name);
+        println!("date: {}", test.date);
+        println!("description: {}", test.description);
+        println!("mark: {}", test.mark);
+
+        save_test(&test, &filepath);
+        println!("test created!");
     }
     else if tests_choice == "view" {
+        let mut filepath = (&path).to_string();
 
+        filepath.push_str("/tests");
+
+        match std::fs::read_dir(&filepath) {
+            Ok(dir) => { }
+            Err(err) => { match std::fs::create_dir(&filepath) {
+                Ok(dir) => { }
+                Err(err) => { println!("could not create 'tests' directory") }
+            } }
+        }
+
+        let tests = std::fs::read_dir(&filepath).unwrap();
+
+        println!("finding tests...");
+        for path in tests {
+            println!("{}", path.unwrap().path().display());
+        }
+
+        let test_name : String = dialoguer::Input::new().with_prompt("enter the name of the test you wish to view").interact().unwrap();
+
+        filepath.push_str("/");
+        filepath.push_str(test_name.as_str());
+        filepath.push_str(".bin");
+
+        println!("loading test...");
+        let test = load_test(&filepath);
+
+        println!("name: {}", test.name);
+        println!("date: {}", test.date);
+        println!("description: {}", test.description);
+        if test.mark == 0 {
+            println!("mark: unmarked");
+        }
+        else {
+            println!("mark: {}", test.mark);
+        }
     }
     else if tests_choice == "edit" {
 
     }
     else if tests_choice == "delete" {
+        let mut filepath = (&path).to_string();
 
+        filepath.push_str("/tests");
+
+        match std::fs::read_dir(&filepath) {
+            Ok(dir) => { }
+            Err(err) => { match std::fs::create_dir(&filepath) {
+                Ok(dir) => { }
+                Err(err) => { println!("could not create 'tests' directory") }
+            } }
+        }
+
+        let tests = std::fs::read_dir(&filepath).unwrap();
+
+        println!("finding tests...");
+        for path in tests {
+            println!("{}", path.unwrap().path().display());
+        }
+
+        let test_delete : String = dialoguer::Input::new().with_prompt("enter the name of the test you wish to delete").interact().unwrap();
+
+        filepath.push_str("/");
+        filepath.push_str(test_delete.as_str());
+        filepath.push_str(".bin");
+
+        std::fs::remove_file(&filepath).expect("test could not be removed.");
     }
 }
 
