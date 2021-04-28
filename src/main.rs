@@ -362,7 +362,10 @@ fn tests(path: &String) {
         filepath.push_str(test_delete.as_str());
         filepath.push_str(".bin");
 
+        println!("deleting test...");
+
         std::fs::remove_file(&filepath).expect("test could not be removed.");
+        println!("test deleted!");
     }
 }
 
