@@ -8,4 +8,4 @@ Currently the assignments part works as expected. Other features will be added. 
 
 #### using the helper cli
 
-Once you have started the cli, it will ask you for a path to create its directory. For this, type something like `C:/Users/USER1>` and it will make the directory. After that, all the instructions are in the app.
+Once you have started the cli, it will ask you for a path to create its directory. For this, type something like `C:/Users/USER1` and it will make the directory. After that, all the instructions are in the app.
