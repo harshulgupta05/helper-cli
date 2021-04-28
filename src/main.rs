@@ -33,6 +33,7 @@ struct Test {
     name: String,
     date: String,
     description: String,
+    mark: u8,
 }
 
 fn save_assignment(assignment: &Assignment, file: &String) {
@@ -109,6 +110,14 @@ fn assignments(path: &String) {
 
         filepath.push_str("/assignments");
 
+        match std::fs::read_dir(&filepath) {
+            Ok(dir) => { println!("reading assignments..."); }
+            Err(err) => { match std::fs::create_dir(&filepath) {
+                Ok(dir) => { }
+                Err(err) => { println!("error creating 'assignments' folder"); }
+            } }
+        }
+
         let assignments = std::fs::read_dir(&filepath).unwrap();
 
         println!("These are the assignments you have saved:");
@@ -145,6 +154,14 @@ fn assignments(path: &String) {
         let mut filepath = (&path).to_string();
 
         filepath.push_str("/assignments");
+
+        match std::fs::read_dir(&filepath) {
+            Ok(dir) => { println!("reading assignments..."); }
+            Err(err) => { match std::fs::create_dir(&filepath) {
+                Ok(dir) => { }
+                Err(err) => { println!("error creating 'assignments' folder"); }
+            } }
+        }
 
         let assignments = std::fs::read_dir(&filepath).unwrap();
 
@@ -206,6 +223,14 @@ fn assignments(path: &String) {
 
         filepath.push_str("/assignments");
 
+        match std::fs::read_dir(&filepath) {
+            Ok(dir) => { println!("reading assignments..."); }
+            Err(err) => { match std::fs::create_dir(&filepath) {
+                Ok(dir) => { }
+                Err(err) => { println!("error creating 'assignments' folder"); }
+            } }
+        }
+
         let assignments = std::fs::read_dir(&filepath).unwrap();
 
         println!("These are the assignments you have saved:");
@@ -223,13 +248,16 @@ fn assignments(path: &String) {
     }
 }
 
-fn tests() {
-    let tests_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create, view, delete)").interact_text().unwrap();
+fn tests(path: &String) {
+    let tests_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create, view, edit, delete)").interact_text().unwrap();
 
     if tests_choice == "create" {
 
     }
     else if tests_choice == "view" {
+
+    }
+    else if tests_choice == "edit" {
 
     }
     else if tests_choice == "delete" {
@@ -253,7 +281,7 @@ fn option(path: &String) {
         assignments(path);
     }
     else if option == "tests" {
-        tests();
+        tests(path);
     }
     else if option == "events" {
         events();
