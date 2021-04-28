@@ -73,7 +73,7 @@ fn assignments(path: &String) {
         filepath.push_str(assignment.name.as_str());
         filepath.push_str(".bin");
 
-        std::fs::File::create(&filepath);
+        std::fs::File::create(&filepath).expect("assignment could not be created.");
 
         save_assignment(&assignment, &filepath)
     }
@@ -110,7 +110,7 @@ fn assignments(path: &String) {
         filepath.push_str(assignment_name.as_str());
         filepath.push_str(".bin");
 
-        std::fs::remove_file(&filepath);
+        std::fs::remove_file(&filepath).expect("assignment could not be found.");
     }
 }
 
