@@ -237,6 +237,7 @@ fn assignments(path: &String) {
         filepath_edited.push_str(assignment.name.as_str());
         filepath_edited.push_str(".bin");
 
+        std::fs::remove_file(&filepath_toedit);
         save_assignment(&assignment, &filepath_edited);
         println!("assignment edited!");
     }
@@ -428,6 +429,7 @@ fn tests(path: &String) {
         filepath_edited.push_str(test.name.as_str());
         filepath_edited.push_str(".bin");
 
+        std::fs::remove_file(&filepath_toedit);
         save_test(&test, &filepath_edited);
         println!("test edited!");
     }
