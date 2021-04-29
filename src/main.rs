@@ -441,9 +441,42 @@ fn homework() {
 
 }
 
+fn reminders(path: &String) {
+    let mut filepath = (&path).to_string();
+
+    let reminders_option : String = dialoguer::Input::new().with_prompt("reminders for (assignments/tests)").interact_text().unwrap();
+
+    if reminders_option == "assignments" {
+        filepath.push_str("/assignments");
+
+        let assignments = std::fs::read_dir(&filepath).unwrap();
+
+        println!("finding assignments...");
+        for path in assignments {
+            let path_name = path.unwrap().path().display().to_string();
+            let assignment = load_assignment(&path_name);
+
+            println!("assignment {} is due on {}", assignment.name, assignment.due_date);
+        }
+    }
+    else if reminders_option == "tests" {
+        filepath.push_str("/tests");
+
+        let tests = std::fs::read_dir(&filepath).unwrap();
+
+        println!("finding tests...");
+        for path in tests {
+            let path_name = path.unwrap().path().display().to_string();
+            let test = load_test(&path_name);
+
+            println!("test {} is on {}", test.name, test.date);
+        }
+    }
+}
+
 #[warn(non_snake_case)]
 fn option(path: &String) {
-    let option : String = dialoguer::Input::new().with_prompt("What would you like to do? (assignments, tests, events, homework)").interact_text().unwrap();
+    let option : String = dialoguer::Input::new().with_prompt("What would you like to do? (assignments, tests, events, homework, reminders)").interact_text().unwrap();
 
     if option == "assignments" {
         assignments(path);
@@ -456,6 +489,9 @@ fn option(path: &String) {
     }
     else if option == "homework" {
         homework();
+    }
+    else if option == "reminders" {
+        reminders(path);
     }
 }
 
