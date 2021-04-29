@@ -183,11 +183,14 @@ fn assignments(path: &String) {
         let assignment_toedit : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to edit").interact().unwrap();
 
         println!("finding assignment...");
-        filepath.push_str("/");
-        filepath.push_str(assignment_toedit.as_str());
-        filepath.push_str(".bin");
 
-        let mut assignment : Assignment = load_assignment(&filepath);
+        let mut filepath_toedit = filepath.clone();
+
+        filepath_toedit.push_str("/");
+        filepath_toedit.push_str(assignment_toedit.as_str());
+        filepath_toedit.push_str(".bin");
+
+        let mut assignment : Assignment = load_assignment(&filepath_toedit);
         println!("assignment found!");
 
         let assignment_mark_toedit : String = assignment.mark.to_string();
@@ -228,7 +231,14 @@ fn assignments(path: &String) {
         println!("Mark: {}", assignment.mark);
         println!("");
 
-        save_assignment(&assignment, &filepath);
+        let mut filepath_edited = filepath.clone();
+
+        filepath_edited.push_str("/");
+        filepath_edited.push_str(assignment.name.as_str());
+        filepath_edited.push_str(".bin");
+
+        save_assignment(&assignment, &filepath_edited);
+        println!("assignment edited!");
     }
     else if assignments_choice == "delete" {
         println!("finding assignments to delete...");
@@ -382,11 +392,14 @@ fn tests(path: &String) {
         let test_toedit : String = dialoguer::Input::new().with_prompt("enter the name of the test you wish to edit").interact().unwrap();
 
         println!("finding test...");
-        filepath.push_str("/");
-        filepath.push_str(test_toedit.as_str());
-        filepath.push_str(".bin");
 
-        let mut test = load_test(&filepath);
+        let mut filepath_toedit = filepath.clone();
+
+        filepath_toedit.push_str("/");
+        filepath_toedit.push_str(test_toedit.as_str());
+        filepath_toedit.push_str(".bin");
+
+        let mut test = load_test(&filepath_toedit);
         println!("test found!");
 
         let test_mark_toedit : String = test.mark.to_string();
@@ -408,6 +421,15 @@ fn tests(path: &String) {
         println!("Description: {}", test.description);
         println!("Mark: {}", test.mark);
         println!("");
+
+        let mut filepath_edited = filepath.clone();
+        
+        filepath_edited.push_str("/");
+        filepath_edited.push_str(test.name.as_str());
+        filepath_edited.push_str(".bin");
+
+        save_test(&test, &filepath_edited);
+        println!("test edited!");
     }
     else if tests_choice == "delete" {
         let mut filepath = (&path).to_string();
