@@ -53,7 +53,10 @@ fn load_test(file: &String) -> Test {
 }
 
 fn assignments(path: &String) {
-    let assignments_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create/view/edit/delete)").interact_text().unwrap();
+    let choices = vec!["create", "view", "edit", "delete"];
+    let assignments_choice = dialoguer::Select::new().with_prompt("What would you like to do?").items(&choices).default(0).interact().unwrap();
+
+    let assignments_choice = choices[assignments_choice].to_string();
 
     if assignments_choice == "create" {
         let mut filepath : String = (&path).to_string();
