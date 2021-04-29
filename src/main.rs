@@ -122,7 +122,10 @@ fn assignments(path: &String) {
 
         println!("These are the assignments you have saved:");
         for path in assignments {
-            println!("{}", path.unwrap().path().display());
+            let path_name = path.unwrap().path().display().to_string();
+            let assignment_option = load_assignment(&path_name);
+
+            println!("{}", assignment_option.name);
         }
         
         let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to view").interact().unwrap();
@@ -167,7 +170,10 @@ fn assignments(path: &String) {
 
         println!("These are the assignments you have saved:");
         for path in assignments {
-            println!("{}", path.unwrap().path().display());
+            let path_name = path.unwrap().path().display().to_string();
+            let assignment_option = load_assignment(&path_name);
+
+            println!("{}", assignment_option.name);
         }
 
         let assignment_toedit : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to edit").interact().unwrap();
@@ -214,6 +220,7 @@ fn assignments(path: &String) {
         println!("Name: {}", assignment.name);
         println!("Due Date: {}", assignment.due_date);
         println!("Completed?: {}", assignment.completed);
+        println!("Mark: {}", assignment.mark);
 
         save_assignment(&assignment, &filepath);
     }
@@ -235,7 +242,10 @@ fn assignments(path: &String) {
 
         println!("These are the assignments you have saved:");
         for path in assignments {
-            println!("{}", path.unwrap().path().display());
+            let path_name = path.unwrap().path().display().to_string();
+            let assignment_option = load_assignment(&path_name);
+
+            println!("{}", assignment_option.name);
         }
         
         let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to delete").interact().unwrap();
@@ -311,7 +321,10 @@ fn tests(path: &String) {
 
         println!("finding tests...");
         for path in tests {
-            println!("{}", path.unwrap().path().display());
+            let path_name = path.unwrap().path().display().to_string();
+            let test_option = load_test(&path_name);
+
+            println!("{}", test_option.name);
         }
 
         let test_name : String = dialoguer::Input::new().with_prompt("enter the name of the test you wish to view").interact().unwrap();
@@ -334,7 +347,55 @@ fn tests(path: &String) {
         }
     }
     else if tests_choice == "edit" {
+        let mut filepath = (&path).to_string();
 
+        filepath.push_str("/tests");
+
+        match std::fs::read_dir(&filepath) {
+            Ok(dir) => { }
+            Err(err) => { match std::fs::create_dir(&filepath) {
+                Ok(dir) => { }
+                Err(err) => { println!("could not create 'tests' directory") }
+            } }
+        }
+
+        let tests = std::fs::read_dir(&filepath).unwrap();
+
+        println!("finding tests...");
+        for path in tests {
+            let path_name = path.unwrap().path().display().to_string();
+            let test_option = load_test(&path_name);
+
+            println!("{}", test_option.name);
+        }
+
+        let test_toedit : String = dialoguer::Input::new().with_prompt("enter the name of the test you wish to edit").interact().unwrap();
+
+        println!("finding test...");
+        filepath.push_str("/");
+        filepath.push_str(test_toedit.as_str());
+        filepath.push_str(".bin");
+
+        let mut test = load_test(&filepath);
+        println!("test found!");
+
+        let test_mark_toedit : String = test.mark.to_string();
+
+        let test_name : String = dialoguer::Input::new().with_prompt("Name").with_initial_text(test.name.as_str()).interact().unwrap();
+        let test_date : String = dialoguer::Input::new().with_prompt("Date").with_initial_text(test.date.as_str()).interact().unwrap();
+        let test_description : String = dialoguer::Input::new().with_prompt("Description").with_initial_text(test.description.as_str()).interact().unwrap();
+        let test_mark_edited : String = dialoguer::Input::new().with_prompt("Mark").with_initial_text(test_mark_toedit.as_str()).interact().unwrap();
+
+        test.name = test_name;
+        test.date = test_date;
+        test.description = test_description;
+        test.mark = test_mark_edited.parse().unwrap();
+
+        println!("The following will be saved:");
+        println!("Name: {}", test.name);
+        println!("Date: {}", test.date);
+        println!("Description: {}", test.description);
+        println!("Mark: {}", test.mark);
     }
     else if tests_choice == "delete" {
         let mut filepath = (&path).to_string();
@@ -353,7 +414,10 @@ fn tests(path: &String) {
 
         println!("finding tests...");
         for path in tests {
-            println!("{}", path.unwrap().path().display());
+            let path_name = path.unwrap().path().display().to_string();
+            let test_option = load_test(&path_name);
+
+            println!("{}", test_option.name);
         }
 
         let test_delete : String = dialoguer::Input::new().with_prompt("enter the name of the test you wish to delete").interact().unwrap();
