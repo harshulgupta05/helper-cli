@@ -96,11 +96,13 @@ fn assignments(path: &String) {
         println!("saving assignment...");
         std::fs::File::create(&filepath).expect("assignment could not be created.");
 
+        println!("");
         println!("The following will be saved:");
         println!("Name: {}", assignment.name);
         println!("Due Date: {}", assignment.due_date);
         println!("Completed?: {}", assignment.completed);
         println!("Mark: {}", assignment.mark);
+        println!("");
 
         save_assignment(&assignment, &filepath)
     }
@@ -147,10 +149,12 @@ fn assignments(path: &String) {
             assignment_completed = "no".to_string();
         }
 
+        println!("");
         println!("Name: {}", assignment.name);
         println!("Due Date: {}", assignment.due_date);
         println!("Completed? {}", assignment_completed);
         println!("Mark: {}", assignment.mark);
+        println!("");
     }
     else if assignments_choice == "edit" {
         println!("finding assignments to edit...");
@@ -216,11 +220,13 @@ fn assignments(path: &String) {
         assignment.due_date = assignment_duedate;
         assignment.mark = assignment_mark_edited.parse().unwrap();
 
+        println!("");
         println!("The following will be saved:");
         println!("Name: {}", assignment.name);
         println!("Due Date: {}", assignment.due_date);
         println!("Completed?: {}", assignment.completed);
         println!("Mark: {}", assignment.mark);
+        println!("");
 
         save_assignment(&assignment, &filepath);
     }
@@ -295,11 +301,13 @@ fn tests(path: &String) {
         println!("creating test....");
         std::fs::File::create(&filepath).expect("could not create file");
 
+        println!("");
         println!("the following info will be saved:");
         println!("name: {}", test.name);
         println!("date: {}", test.date);
         println!("description: {}", test.description);
         println!("mark: {}", test.mark);
+        println!("");
 
         save_test(&test, &filepath);
         println!("test created!");
@@ -336,6 +344,7 @@ fn tests(path: &String) {
         println!("loading test...");
         let test = load_test(&filepath);
 
+        println!("");
         println!("name: {}", test.name);
         println!("date: {}", test.date);
         println!("description: {}", test.description);
@@ -345,6 +354,7 @@ fn tests(path: &String) {
         else {
             println!("mark: {}", test.mark);
         }
+        println!("");
     }
     else if tests_choice == "edit" {
         let mut filepath = (&path).to_string();
@@ -391,11 +401,13 @@ fn tests(path: &String) {
         test.description = test_description;
         test.mark = test_mark_edited.parse().unwrap();
 
+        println!("");
         println!("The following will be saved:");
         println!("Name: {}", test.name);
         println!("Date: {}", test.date);
         println!("Description: {}", test.description);
         println!("Mark: {}", test.mark);
+        println!("");
     }
     else if tests_choice == "delete" {
         let mut filepath = (&path).to_string();
