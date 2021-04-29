@@ -468,7 +468,9 @@ fn reminders(path: &String) {
             let path_name = path.unwrap().path().display().to_string();
             let assignment = load_assignment(&path_name);
 
+            println!("");
             println!("assignment {} is due on {}", assignment.name, assignment.due_date);
+            println!("");
         }
     }
     else if reminders_option == "tests" {
@@ -481,7 +483,9 @@ fn reminders(path: &String) {
             let path_name = path.unwrap().path().display().to_string();
             let test = load_test(&path_name);
 
+            println!("");
             println!("test {} is on {}", test.name, test.date);
+            println!("");
         }
     }
 }
