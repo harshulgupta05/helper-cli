@@ -1,18 +1,3 @@
-#[warn(non_snake_case)]
-fn first_time() -> bool {
-    let input : String = dialoguer::Input::new()
-        .with_prompt("Have you used this app before? (y/n) ")
-        .interact_text()
-        .unwrap();
-    
-    if input == "y" {
-        return false;
-    }
-    else {
-        return true;
-    }
-}
-
 use serde::Serialize;
 use serde::Deserialize;
 use std::fmt::Debug;
@@ -64,10 +49,10 @@ fn assignments(path: &String) {
         filepath.push_str("/assignments");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { println!("reading assignments..."); }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("error creating 'assignments' folder"); }
+            Ok(_dir) => { println!("reading assignments..."); }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("error creating 'assignments' folder"); }
             } }
         }
 
@@ -76,13 +61,13 @@ fn assignments(path: &String) {
         let assignment_complete : String = dialoguer::Input::new().with_prompt("Is the assignment done? (y/n)").interact_text().unwrap();
         let assignment_mark : String = dialoguer::Input::new().with_prompt("Enter the assignment mark (enter 0 if unmarked)").interact().unwrap();
         let assignment_mark_int : u8 = assignment_mark.trim().parse().unwrap();
-        let assignment_complete_bool = false;
+        let mut assignment_complete_bool : bool = false;
 
         if assignment_complete == "y" {
-            let assignment_complete_bool : bool = true;
+            assignment_complete_bool = true;
         }
         else {
-            let assignment_complete_bool : bool = false;
+            assignment_complete_bool = false;
         }
 
         let assignment = Assignment {
@@ -116,10 +101,10 @@ fn assignments(path: &String) {
         filepath.push_str("/assignments");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { println!("reading assignments..."); }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("error creating 'assignments' folder"); }
+            Ok(_dir) => { println!("reading assignments..."); }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("error creating 'assignments' folder"); }
             } }
         }
 
@@ -166,10 +151,10 @@ fn assignments(path: &String) {
         filepath.push_str("/assignments");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { println!("reading assignments..."); }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("error creating 'assignments' folder"); }
+            Ok(_dir) => { println!("reading assignments..."); }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("error creating 'assignments' folder"); }
             } }
         }
 
@@ -240,7 +225,7 @@ fn assignments(path: &String) {
         filepath_edited.push_str(assignment.name.as_str());
         filepath_edited.push_str(".bin");
 
-        std::fs::remove_file(&filepath_toedit);
+        std::fs::remove_file(&filepath_toedit).expect("could not remove assignment");
         save_assignment(&assignment, &filepath_edited);
         println!("assignment edited!");
     }
@@ -251,10 +236,10 @@ fn assignments(path: &String) {
         filepath.push_str("/assignments");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { println!("reading assignments..."); }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("error creating 'assignments' folder"); }
+            Ok(_dir) => { println!("reading assignments..."); }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("error creating 'assignments' folder"); }
             } }
         }
 
@@ -290,10 +275,10 @@ fn tests(path: &String) {
         filepath.push_str("/tests");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("could not create 'tests' directory") }
+            Ok(_dir) => { }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("could not create 'tests' directory") }
             } }
         }
 
@@ -335,10 +320,10 @@ fn tests(path: &String) {
         filepath.push_str("/tests");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("could not create 'tests' directory") }
+            Ok(_dir) => { }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("could not create 'tests' directory") }
             } }
         }
 
@@ -379,10 +364,10 @@ fn tests(path: &String) {
         filepath.push_str("/tests");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("could not create 'tests' directory") }
+            Ok(_dir) => { }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("could not create 'tests' directory") }
             } }
         }
 
@@ -435,7 +420,7 @@ fn tests(path: &String) {
         filepath_edited.push_str(test.name.as_str());
         filepath_edited.push_str(".bin");
 
-        std::fs::remove_file(&filepath_toedit);
+        std::fs::remove_file(&filepath_toedit).expect("could not delete test");
         save_test(&test, &filepath_edited);
         println!("test edited!");
     }
@@ -445,10 +430,10 @@ fn tests(path: &String) {
         filepath.push_str("/tests");
 
         match std::fs::read_dir(&filepath) {
-            Ok(dir) => { }
-            Err(err) => { match std::fs::create_dir(&filepath) {
-                Ok(dir) => { }
-                Err(err) => { println!("could not create 'tests' directory") }
+            Ok(_dir) => { }
+            Err(_err) => { match std::fs::create_dir(&filepath) {
+                Ok(_dir) => { }
+                Err(_err) => { println!("could not create 'tests' directory") }
             } }
         }
 
