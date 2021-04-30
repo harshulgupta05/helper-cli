@@ -279,7 +279,10 @@ fn assignments(path: &String) {
 }
 
 fn tests(path: &String) {
-    let tests_choice : String = dialoguer::Input::new().with_prompt("What would you like to do? (create, view, edit, delete)").interact_text().unwrap();
+    let choices = vec!["create", "view", "edit", "delete"];
+    let tests_choice = dialoguer::Select::new().with_prompt("What would you like to do?").items(&choices).default(0).interact().unwrap();
+
+    let tests_choice = choices[tests_choice].to_string();
 
     if tests_choice == "create" {
         let mut filepath = (&path).to_string();
@@ -483,7 +486,10 @@ fn homework() {
 fn reminders(path: &String) {
     let mut filepath = (&path).to_string();
 
-    let reminders_option : String = dialoguer::Input::new().with_prompt("reminders for (assignments/tests)").interact_text().unwrap();
+    let choices = vec!["assignments", "tests"];
+    let reminders_option = dialoguer::Select::new().with_prompt("What would you like to do?").items(&choices).default(0).interact().unwrap();
+
+    let reminders_option = choices[reminders_option].to_string();
 
     if reminders_option == "assignments" {
         filepath.push_str("/assignments");
@@ -519,22 +525,34 @@ fn reminders(path: &String) {
 
 #[warn(non_snake_case)]
 fn option(path: &String) {
-    let option : String = dialoguer::Input::new().with_prompt("What would you like to do? (assignments, tests, events, homework, reminders)").interact_text().unwrap();
+    let choices = vec!["assignments", "tests", "events", "homework", "reminders"];
+    let option_choice = dialoguer::Select::new().with_prompt("What would you like to do?").items(&choices).default(0).interact().unwrap();
 
-    if option == "assignments" {
+    let option_choice = choices[option_choice].to_string();
+
+    if option_choice == "assignments" {
         assignments(path);
     }
-    else if option == "tests" {
+    else if option_choice == "tests" {
         tests(path);
     }
-    else if option == "events" {
+    else if option_choice == "events" {
         events();
     }
-    else if option == "homework" {
+    else if option_choice == "homework" {
         homework();
     }
-    else if option == "reminders" {
+    else if option_choice == "reminders" {
         reminders(path);
+    }
+
+    let done : String = dialoguer::Input::new().with_prompt("Is there anything else you need? (y/n) ").interact_text().unwrap();
+
+    if done == "y" {
+        option(path);
+    }
+    else {
+        println!("Thanks for using helper! Goodbye!");
     }
 }
 
@@ -551,22 +569,7 @@ fn main() {
 
         std::fs::create_dir(&path);
 
-        let mut done : bool = false;
-
-        while done == false {
-            option(&path);
-
-            let mut arewedoneyet : String = dialoguer::Input::new().with_prompt("Is there anything else you need? (y/n) ").interact_text().unwrap();
-
-            if arewedoneyet == "y" {
-                option(&path);
-            }
-            else {
-                println!("Goodbye!");
-                done = true;
-                continue;
-            }
-        }
+        option(&path);
     }
     else {
         let mut path : String = dialoguer::Input::new().with_prompt("Please enter the path to find the Helper directory").interact().unwrap();
@@ -578,21 +581,6 @@ fn main() {
             Err(err) => { println!("The helper-files directory either cannot be found or you don't have permission to access it.") }
         }
 
-        let mut done : bool = false;
-
-        while done == false {
-            option(&path);
-
-            let mut arewedoneyet : String = dialoguer::Input::new().with_prompt("Is there anything else you need? (y/n) ").interact_text().unwrap();
-
-            if arewedoneyet == "y" {
-                option(&path);
-            }
-            else {
-                println!("Goodbye!");
-                done = true;
-                continue;
-            }
-        }
+        option(&path);
     }
 }
