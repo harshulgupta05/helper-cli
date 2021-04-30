@@ -560,27 +560,14 @@ fn option(path: &String) {
 fn main() {
     println!("Welcome to Helper CLI! ");
 
-    let firstTime : bool = first_time();
+    let mut path = std::env::current_dir().unwrap().display().to_string();
 
-    if firstTime == true {
-        let mut path : String = dialoguer::Input::new().with_prompt("Please enter the path to create the Helper directory").interact().unwrap();
+    path.push_str("/helper-files");
 
-        path.push_str("/helper-files");
-
-        std::fs::create_dir(&path);
-
-        option(&path);
+    match std::fs::read_dir(&path) {
+        Ok(_dir) => { println!("Directory found!") }
+        Err(_err) => { std::fs::create_dir(&path).expect("could not create directory"); }
     }
-    else {
-        let mut path : String = dialoguer::Input::new().with_prompt("Please enter the path to find the Helper directory").interact().unwrap();
 
-        path.push_str("/helper-files");
-
-        match std::fs::read_dir(&path) {
-            Ok(dir) => { println!("Directory found!") }
-            Err(err) => { println!("The helper-files directory either cannot be found or you don't have permission to access it.") }
-        }
-
-        option(&path);
-    }
+    option(&path);
 }
