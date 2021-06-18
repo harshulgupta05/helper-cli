@@ -225,15 +225,18 @@ pub fn assignments(path: &String) {
 
         let assignments = std::fs::read_dir(&filepath).unwrap();
 
+        let mut assignment_options = std::vec::Vec::new();
+
         println!("These are the assignments you have saved:");
         for path in assignments {
             let path_name = path.unwrap().path().display().to_string();
             let assignment_option = load_assignment(&path_name);
 
-            println!("{}", assignment_option.name);
+            assignment_options.push(assignment_option.name);
         }
         
-        let assignment_name : String = dialoguer::Input::new().with_prompt("Enter the name of the assignment you wish to delete").interact().unwrap();
+        let assignment_name = dialoguer::Select::new().with_prompt("Please select an assignment to delete").items(&assignment_options).default(0).interact().unwrap();
+        let assignment_name = assignment_options[assignment_name].to_string();
 
         filepath.push_str("/");
         filepath.push_str(assignment_name.as_str());
