@@ -13,7 +13,7 @@ pub fn save_event(event: &Event, file: &String) {
     savefile::prelude::save_file(file, 0, event).unwrap();
 }
 
-pub fn load_event(file: &String) -> Event {
+pub fn load_event(file: &String) -> Result<Event, std::io::Error>  {
     return savefile::prelude::load_file(file, 0);
 }
 
@@ -103,5 +103,21 @@ pub fn viewEvent(path: &String) {
     for path in events_choices {
         let option = load_event(path.unwrap().path().display().to_string());
         options.insert(option);
+    }
+
+    let events_choice = dialoguer::Select::new().with_prompt("Which event would you like to view?").items(events_choices).default(0).interact().unwrap();
+
+    println!("finding event...");
+    filepath.push_str("/" + events_choice.as_str() + ".bin");
+
+    let to_view : Event = load_event(&filepath).expect("event could not be loaded.").unwrap();
+
+    println!();
+    println!("The following has been saved:");
+    println!("Event Name: {}", to_view.name);
+    println!("Event Date: {}", to_view.date);
+    println!("Event Description {}", to_view.description);
+    for to_view in event.todo {
+        println!("Event TODO: {}", to_view);
     }
 } 
