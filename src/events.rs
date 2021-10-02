@@ -13,6 +13,10 @@ pub fn save_event(event: &Event, file: &String) {
     savefile::prelude::save_file(file, 0, event).unwrap();
 }
 
+pub fn load_event(file: &String) -> Event {
+    return savefile::prelude::load_file(file, 0);
+}
+
 pub fn events(path: &String) {
     let choices = vec!["create", "edit", "view", "delete"];
     let choice = dialoguer::Select::new()
@@ -27,7 +31,7 @@ pub fn events(path: &String) {
     match choice {
         "create" => createEvent(path),
         "edit" => editEvent(),
-        "view" => viewEvent(),
+        "view" => viewEvent(path),
         "delete" => deleteEvent()
     }
 }
@@ -76,3 +80,28 @@ pub fn createEvent(path: &String) {
 
     save_event(&event, &filepath);
 }
+
+pub fn viewEvent(path: &String) {
+    let mut filepath = (&path).to_string();
+
+    filepath.push_str("/events");
+
+    println!("finding events to view...");
+
+    match std::fs::read_dir(&filepath) {
+        Ok(_dir) => { println!("reading events..."); },
+        Err(_err) => {
+            println!("events directory either does not exist or is not in the active directory. there are no events to view.");
+            return;
+        }
+    }
+
+    let events_choices = std::fs::read_dir(&filepath).unwrap();
+
+    let mut options = new Vec;
+
+    for path in events_choices {
+        let option = load_event(path.unwrap().path().display().to_string());
+        options.insert(option);
+    }
+} 
