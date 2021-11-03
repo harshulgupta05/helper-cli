@@ -121,3 +121,41 @@ pub fn viewEvent(path: &String) {
         println!("Event TODO: {}", to_view);
     }
 } 
+
+pub fn editEvent(path: &String) {
+    let mut filepath = (&path).to_string();
+
+    filepath.push_str("/events");
+
+    println!("finding events to edit...");
+
+    match std::fs::read_dir(&filepath) {
+        Ok(_dir) => { println!("reading events...") },
+        Err(_err) => {
+            println!("events directory either does not exist or was not found");
+            return;
+        }
+    }
+
+    let events_choices = std::fs::read_dir(&filepath).unwrap();
+
+    let mut options = new Vec;
+
+    for path in events_choices {
+        let option = load_event(path.unwrap().path().display().to_string());
+        options.insert(option);
+    }
+
+    let events_choice = dialoguer::Select::new().with_prompt("Which event would you like to edit?").items(events_choices).default(0).interact().unwrap();
+
+    println!("finding event...");
+    filepath.push_str("/" + events_choice.as_str() + ".bin");
+
+    let to_view : Event = load_event(&filepath).expect("event could not be loaded").unwrap();
+    println!("event found...");
+
+    let event_name : String = dialoguer::Input::new().with_prompt("Event Name").with_initial_text(to_view.name.as_str()).interact().unwrap();
+    let event_desc : String = dialoguer::Input::new().with_prompt("Description").with_initial_text(to_view.description.as_str()).interact().unwrap();
+    let event_date : String = dialoguer::Input::new().with_prompt("Date").with_initial_text(to_view.date.as_str()).interact().unwrap();
+    // figure out event todo editing
+}
