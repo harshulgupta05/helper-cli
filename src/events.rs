@@ -158,4 +158,25 @@ pub fn editEvent(path: &String) {
     let event_desc : String = dialoguer::Input::new().with_prompt("Description").with_initial_text(to_view.description.as_str()).interact().unwrap();
     let event_date : String = dialoguer::Input::new().with_prompt("Date").with_initial_text(to_view.date.as_str()).interact().unwrap();
     // figure out event todo editing
+    println!("the todo list includes:")
+    for todo in to_view.todo {
+        let edited_todo : String = dialoguer::Input::new().with_prompt("The next TODO: (type delete to delete)").with_initial_text(todo.as_str()).interact().unwrap();
+        todo = edited_todo;
+    }
+
+    println!("the following will be saved:");
+    println!("Event Name: {}", to_view.name);
+    println!("Event Description: {}", to_view.description);
+    println!("Event Date: {}", to_view.date);
+     for to_save in to_view.todo {
+        println!("Event TODO: {}", to_save);
+    }
+
+    let mut filepath_edited - filepath.clone();
+
+    filepath_edited.push_str("/" + to_view.name.as_str() + ".bin");
+
+    std::fs::remove_file(&filepath).expect("could not remove event.");
+    save_event(&to_view, &filepath_edited);
+    println!("event edited.");
 }
